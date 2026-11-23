@@ -30,6 +30,4 @@ images/           лого (logo.svg — цэнхэр, logo-white.svg — цаг
 - Саарал зургийн орлуулгуудыг (`class="ph"`) жинхэнэ зургаар солих: `images/` хавтсанд зургаа хийгээд
   `<div class="card__media ph">...</div>` хэсгийг `<img class="card__media" src="images/zurag.jpg" alt="..." style="object-fit:cover">` болгоно.
 - Маягтууд одоогоор хаашаа ч илгээгдэхгүй. Хүлээж авахын тулд Formspree, Netlify Forms гэх мэт үйлчилгээ холбох шаардлагатай.
-- Дотоод хамтрагчдын (УБТЗ, МТЗ, Mongolian Trans Line) лого, Google Maps газрын зураг оруулах.
-  Гадаад хамтрагчдын лого `images/partners/` хавтсанд байгаа.
 - Логоны албан ёсны файл байвал `images/logo.svg`-ийг түүгээр солих.
