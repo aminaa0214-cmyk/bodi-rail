@@ -147,6 +147,7 @@ p { margin: 0; }
 .hero__actions { display: flex; flex-wrap: wrap; gap: 16px; padding-top: 8px; }
 .hero__media { flex: 1 1 420px; min-width: 0; height: 460px; border-radius: 0 220px 0 220px; background: #1B3358; border: 2px dashed #4F6C94; color: var(--light); }
 .hero__media::before { filter: invert(1); opacity: .7; }
+.hero__media--photo { border: 0; object-fit: cover; object-position: 70% center; }
 
 /* Дотоод хуудасны толгой */
 .page-hero { background: var(--navy); color: #fff; padding-bottom: 72px; }
@@ -222,7 +223,9 @@ p { margin: 0; }
 .partners__group { flex: 1 1 480px; min-width: 0; display: flex; flex-direction: column; gap: 16px; }
 .partners__label { font-size: 14px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
 .logo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr)); gap: 16px; }
-.logo-box { height: 104px; border: 1px solid var(--ph); border-radius: 16px; display: flex; align-items: center; justify-content: center; text-align: center; padding: 8px; font-size: 14px; font-weight: 600; }
+.logo-box { height: 104px; border: 1px solid var(--ph); border-radius: 16px; display: flex; align-items: center; justify-content: center; text-align: center; padding: 8px; font-size: 14px; font-weight: 600; overflow: hidden; background: #fff; }
+.logo-box img { width: 100%; height: 100%; object-fit: contain; padding: 10px; }
+.logo-box img.logo--wide-margin { transform: scale(1.6); } /* Wabtec зурагт ирмэгийн цагаан зай их байгаа тул томруулна */
 
 /* ---------- Хоёр карт (Relume Layout 362 хэв маяг) ---------- */
 .promo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr)); gap: 24px; }
