@@ -1,0 +1,12 @@
+{
+  "name": "bodi-rail",
+  "private": true,
+  "description": "Next.js хувилбар нь web/ хавтсанд байна. Эдгээр командыг root хавтаснаас ажиллуулж болно.",
+  "scripts": {
+    "postinstall": "npm --prefix web install",
+    "dev": "npm --prefix web run dev",
+    "build": "npm --prefix web run build",
+    "start": "npm --prefix web run start",
+    "typecheck": "npm --prefix web run typecheck"
+  }
+}

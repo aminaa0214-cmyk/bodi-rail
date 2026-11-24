@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+/* =========================================================
+   Bodi Rail — өнгө, фонт, хэмжээ
+   Эндээс өөрчилбөл бүх хуудсанд нөлөөлнө.
+   Жишээ: --color-navy → bg-navy, text-navy, border-navy
+   ========================================================= */
+@theme {
+  --color-navy: #031530;        /* үндсэн хар хөх */
+  --color-navy-2: #13294b;      /* footer */
+  --color-blue: #007bc9;        /* товч */
+  --color-blue-dark: #0a73ba;   /* холбоос, шошго */
+  --color-brand: #0f75bc;       /* логоны өнгө */
+  --color-sky: #e6f2fa;         /* цайвар цэнхэр шошго */
+  --color-soft: #f3f6fa;        /* саарал дэвсгэр */
+  --color-ph: #dce3ec;          /* зургийн орлуулга */
+  --color-line: #c5d0dc;        /* хүрээ */
+  --color-muted: #4a5a70;       /* туслах текст */
+  --color-light: #c9d6e8;       /* хар дэвсгэр дээрх текст */
+  --color-accent-dark: #8fc8f0; /* хар дэвсгэр дээрх тод текст */
+
+  --radius-card: 20px;
+
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+
+  /* Хуучин сайтын 900px, 600px таслалтай тааруулсан */
+  --breakpoint-sm: 37.5rem;
+  --breakpoint-md: 56.25rem;
+}
+
+@layer base {
+  body {
+    @apply bg-white leading-normal text-navy;
+  }
+  a {
+    @apply text-blue-dark;
+  }
+  a:hover {
+    @apply text-navy;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply leading-[1.2];
+  }
+  button:not(:disabled) {
+    @apply cursor-pointer;
+  }
+}
+
+/* Зөвхөн харах: хулганы баруун товч, чирж хадгалах, сонгохыг хаана */
+@utility protected {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -webkit-touch-callout: none;
+  pointer-events: none;
+}

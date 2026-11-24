@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 432 432">
+  <defs>
+    <clipPath id="inner"><circle cx="216" cy="216" r="170"/></clipPath>
+    <mask id="cells">
+      <rect width="432" height="432" fill="#fff"/>
+      <circle cx="216" cy="216" r="170" fill="#000"/>
+      <g clip-path="url(#inner)">
+        <circle cx="0" cy="0" r="258" fill="#fff"/>
+        <circle cx="432" cy="0" r="258" fill="#fff"/>
+        <circle cx="0" cy="432" r="258" fill="#fff"/>
+        <circle cx="432" cy="432" r="258" fill="#fff"/>
+        <circle cx="0" cy="0" r="195" fill="#000"/>
+        <circle cx="432" cy="0" r="195" fill="#000"/>
+        <circle cx="0" cy="432" r="195" fill="#000"/>
+        <circle cx="432" cy="432" r="195" fill="#000"/>
+      </g>
+    </mask>
+  </defs>
+  <circle cx="216" cy="216" r="216" fill="#0F75BC" mask="url(#cells)"/>
+</svg>
