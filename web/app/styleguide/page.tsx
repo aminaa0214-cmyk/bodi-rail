@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/layout/PageHero";
-import { Brand } from "@/components/layout/Brand";
 import { AutoGrid } from "@/components/ui/AutoGrid";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { Card, CardText, CardTitle } from "@/components/ui/Card";
@@ -17,6 +16,7 @@ import { Tag } from "@/components/ui/Tag";
 import { Checklist, DarkCard, RouteChips } from "@/components/sections/Lists";
 import { FormFieldset, FormGrid, SelectField, TextareaField, TextField, UnitField } from "@/components/forms/Field";
 import { cn } from "@/lib/cn";
+import { LogoGuide } from "./LogoGuide";
 
 export const metadata: Metadata = {
   title: "Загварын стандарт",
@@ -232,9 +232,10 @@ export default function StyleguidePage() {
         title="Өнгө"
         description={
           <>
-            Үндсэн өнгөнүүд (<Code>navy</Code>, <Code>blue</Code>, <Code>blue-dark</Code>) Бодь Группийн брэндийн
-            өнгөтэй ижил. Бүх өнгө <Code>app/globals.css</Code>-ийн <Code>@theme</Code> хэсэгт тодорхойлогдсон, нэр
-            бүрийг <Code>bg-</Code>, <Code>text-</Code>, <Code>border-</Code> угтвартай ашиглана.
+            Вэбсайтын интерфейсийн өнгө (<Code>navy</Code>, <Code>blue</Code>, <Code>blue-dark</Code> нь bodigroup.mn
+            вэбсайттай ижил). Брэндбүүкийн албан ёсны өнгийг <a href="#logo">Лого</a> хэсгээс харна уу. Бүх өнгө{" "}
+            <Code>app/globals.css</Code>-ийн <Code>@theme</Code> хэсэгт тодорхойлогдсон, нэр бүрийг <Code>bg-</Code>,{" "}
+            <Code>text-</Code>, <Code>border-</Code> угтвартай ашиглана.
           </>
         }
       >
@@ -533,21 +534,9 @@ export default function StyleguidePage() {
         id="logo"
         pill="09"
         title="Лого"
-        description={
-          <>
-            <Code>Brand</Code> компонент. Цагаан дэвсгэр дээр <Code>brand</Code> өнгөтэй, хар дэвсгэр дээр{" "}
-            <Code>light</Code> хувилбар.
-          </>
-        }
+        description="Бодь Группийн «Брэнд хөтөч»-ийн 2-р бүлэг «Логоны байгуулалт, стандарт»-ын дагуу: бүтэц, харьцаа, хэмжээ, өнгө, дэвсгэр, хориглох зүйлс."
       >
-        <AutoGrid min={380}>
-          <Specimen label={<><Code>{"<Brand />"}</Code> · цагаан дэвсгэр</>} className="min-h-40 justify-center">
-            <Brand />
-          </Specimen>
-          <Specimen dark label={<><Code>{"<Brand light />"}</Code> · хар дэвсгэр</>} className="min-h-40 justify-center">
-            <Brand light />
-          </Specimen>
-        </AutoGrid>
+        <LogoGuide />
       </Block>
     </>
   );
