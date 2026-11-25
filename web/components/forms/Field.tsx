@@ -1,6 +1,6 @@
 import { cn } from "@/lib/cn";
 
-const control =
+export const control =
   "min-h-12 rounded-[10px] border border-line bg-white px-3.5 text-[15px] font-normal text-navy focus:outline-2 focus:outline-offset-1 focus:outline-blue";
 
 type BaseProps = {

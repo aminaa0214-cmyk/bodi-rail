@@ -38,7 +38,7 @@ export const mainNav: NavItem[] = [
   { label: "Худалдаа", href: "/hudaldaa", activePrefix: "/hudaldaa" },
   { label: "Үйлчилгээ", href: "/uilchilgee", activePrefix: "/uilchilgee" },
   { label: "Мэдээ", href: "/#news", activePrefix: "/medee" },
-  { label: "Хүний нөөц", href: "#" },
+  { label: "Хүний нөөц", href: "/hunii-nuuts", activePrefix: "/hunii-nuuts" },
 ];
 
 export const footerNav: { title: string; links: NavItem[] }[] = [
@@ -54,8 +54,8 @@ export const footerNav: { title: string; links: NavItem[] }[] = [
   {
     title: "Хүний нөөц",
     links: [
-      { label: "Нээлттэй ажлын байр", href: "#" },
-      { label: "Анкет илгээх", href: "#" },
+      { label: "Нээлттэй ажлын байр", href: "/hunii-nuuts#jobs" },
+      { label: "Анкет илгээх", href: "/hunii-nuuts#apply" },
       { label: "Бодь Групп", href: "https://www.bodigroup.mn/" },
     ],
   },

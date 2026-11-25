@@ -173,7 +173,7 @@ export default function HomePage() {
           <PromoCard
             title="Нээлттэй ажлын байр"
             text="Бодь Рэйлийн багт нэгдэж, төмөр замын салбарт карьераа хөгжүүлээрэй."
-            cta={{ label: "Ажлын байр үзэх", href: "#" }}
+            cta={{ label: "Ажлын байр үзэх", href: "/hunii-nuuts#jobs" }}
             image={{
               src: "/images/ajliin-bair.jpg",
               alt: "Төмөр замын хяналтын төвд ажиллаж буй ажилтнууд",
