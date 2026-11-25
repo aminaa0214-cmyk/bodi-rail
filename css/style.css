@@ -343,6 +343,66 @@ legend { padding: 0 0 16px; font-size: 13px; font-weight: 700; letter-spacing: .
 .input-unit span { padding: 0 14px; background: var(--soft); color: var(--muted); font-weight: 600; display: flex; align-items: center; }
 .form .btn { align-self: flex-start; }
 
+/* ---------- Хүний нөөц: ажлын байр ---------- */
+.jobs { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 20px; }
+.job { background: #fff; border: 1px solid var(--ph); border-radius: var(--radius); padding: 24px; display: flex; flex-direction: column; gap: 12px; }
+.job h3 { font-size: 20px; }
+.job__meta { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; font-size: 14px; }
+.job__meta dt { color: var(--muted); }
+.job__meta dd { margin: 0; font-weight: 600; }
+.job__text { font-size: 14px; line-height: 1.6; color: var(--muted); }
+.job .btn { align-self: flex-start; margin-top: auto; min-height: 44px; font-size: 14px; }
+.job__details { font-size: 14px; line-height: 1.6; }
+.job__details summary { display: inline-flex; align-items: center; min-height: 44px; cursor: pointer; font-weight: 600; color: var(--blue-dark); }
+.job__details h4 { margin: 12px 0 6px; font-size: 14px; color: var(--navy); }
+.job__details ul { margin: 0; padding-left: 18px; color: var(--muted); }
+.job__details li { margin-bottom: 4px; }
+.jobs { align-items: start; }
+.job { height: 100%; }
+
+/* ---------- Хүний нөөц: бид санал болгоно ---------- */
+.benefits { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 20px; }
+.benefit { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.15); border-radius: var(--radius); padding: 28px; display: flex; flex-direction: column; gap: 10px; }
+.benefit__icon { width: 48px; height: 48px; border-radius: 12px; background: rgba(79,163,224,.18); color: var(--accent-dark); display: flex; align-items: center; justify-content: center; }
+.benefit__icon svg { width: 26px; height: 26px; }
+.benefit h3 { font-size: 18px; }
+.benefit p { font-size: 15px; line-height: 1.6; color: var(--light); }
+
+/* ---------- Хүний нөөц: онлайн анкет ---------- */
+.req { color: #C62828; }
+.anket { display: flex; flex-direction: column; gap: 20px; }
+.anket__part { background: #fff; border-radius: var(--radius); padding: 32px; }
+.anket__part > legend { float: left; width: 100%; padding: 0 0 20px; margin-bottom: 4px; border-bottom: 1px solid var(--ph); font-size: 20px; font-weight: 800; letter-spacing: 0; text-transform: none; color: var(--navy); }
+.anket__part > legend + * { clear: both; }
+.anket__sub { margin: 28px 0 12px; font-size: 15px; font-weight: 700; color: var(--navy); }
+.anket__sub small, .field small { font-weight: 400; color: var(--muted); }
+.form-grid--tight { gap: 12px 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); }
+.row-card { position: relative; border: 1px solid var(--ph); border-radius: 12px; padding: 16px; margin-bottom: 12px; background: var(--soft); }
+.row-card .field input, .row-card .field select, .row-card .field textarea { min-height: 42px; }
+.btn-add { min-height: 44px; padding: 0 16px; border: 1px dashed var(--blue-dark); border-radius: 10px; background: transparent; color: var(--blue-dark); font: 600 14px var(--font); cursor: pointer; }
+.btn-add:hover { background: var(--sky); }
+.btn-remove { margin-top: 12px; min-height: 36px; padding: 0 12px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: #C62828; font: 600 13px var(--font); cursor: pointer; }
+.checks { display: flex; flex-wrap: wrap; gap: 8px 20px; font-weight: 400; padding-top: 4px; }
+.checks label { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; cursor: pointer; }
+.checks input { width: 18px; height: 18px; accent-color: var(--blue); }
+.form-note { font-size: 14px; color: var(--muted); margin: 0 0 16px; }
+.uploads { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 20px; }
+.upload input[type="file"] { padding: 10px; min-height: 48px; background: var(--soft); border: 1px dashed var(--line); }
+.upload--photo { display: flex; gap: 16px; align-items: flex-end; }
+.upload--photo .field { flex: 1; min-width: 0; }
+.photo-preview { flex: none; width: 90px; height: 120px; border-radius: 8px; border: 1px dashed var(--line); background: var(--soft); display: flex; align-items: center; justify-content: center; text-align: center; font-size: 12px; color: var(--muted); overflow: hidden; }
+.photo-preview img { width: 100%; height: 100%; object-fit: cover; }
+.consent { display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.6; margin-bottom: 16px; cursor: pointer; }
+.consent input { flex: none; width: 20px; height: 20px; margin-top: 3px; accent-color: var(--blue); }
+.anket__part--confirm .form-grid { margin-top: 8px; }
+.anket__submit { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; }
+.form-status { margin: 0; font-size: 15px; font-weight: 600; flex: 1 1 320px; }
+.form-status.is-error { color: #C62828; }
+.form-status.is-success { color: #1B7A3E; }
+.is-invalid, .field .is-invalid { border-color: #C62828 !important; outline: 2px solid rgba(198, 40, 40, .2); }
+.checks.is-invalid { border: 1px solid #C62828; border-radius: 8px; padding: 4px 8px; }
+@media (max-width: 600px) { .anket__part { padding: 20px; } }
+
 /* ---------- Footer ---------- */
 .site-footer { background: var(--navy-2); color: #fff; padding: 80px 0 32px; }
 .site-footer .container { display: flex; flex-direction: column; gap: 48px; }
