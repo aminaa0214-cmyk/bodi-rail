@@ -15,7 +15,7 @@
 ```
 css/style.css     бүх хуудасны өнгө, фонт, хэмжээ (дээд хэсгийн :root дотор өнгөнүүд байна)
 js/main.js        гар утсан дээрх цэсийг нээх, хаах
-images/           лого (logo.svg — цэнхэр, logo-white.svg — цагаан)
+images/           брэндбүүкийн лого: logo-full.svg (тэмдэг + бичиглэл), logo.svg (зөвхөн тэмдэг), -white — цагаан хувилбар
 ```
 
 ## VS Code дээр харах
@@ -30,4 +30,3 @@ images/           лого (logo.svg — цэнхэр, logo-white.svg — цаг
 - Саарал зургийн орлуулгуудыг (`class="ph"`) жинхэнэ зургаар солих: `images/` хавтсанд зургаа хийгээд
   `<div class="card__media ph">...</div>` хэсгийг `<img class="card__media" src="images/zurag.jpg" alt="..." style="object-fit:cover">` болгоно.
 - Маягтууд одоогоор хаашаа ч илгээгдэхгүй. Хүлээж авахын тулд Formspree, Netlify Forms гэх мэт үйлчилгээ холбох шаардлагатай.
-- Логоны албан ёсны файл байвал `images/logo.svg`-ийг түүгээр солих.

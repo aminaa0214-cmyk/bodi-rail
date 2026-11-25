@@ -38,7 +38,7 @@ const colorGroups: { title: string; colors: Swatch[] }[] = [
     colors: [
       { token: "navy", swatch: "bg-navy", hex: "#031530", use: "Гарчиг, үндсэн текст, хар дэвсгэр", dark: true },
       { token: "navy-2", swatch: "bg-navy-2", hex: "#13294B", use: "Footer-ийн дэвсгэр", dark: true },
-      { token: "brand", swatch: "bg-brand", hex: "#0F75BC", use: "Логоны өнгө", dark: true },
+      { token: "brand", swatch: "bg-brand", hex: "#0072BC", use: "Логоны өнгө (брэндбүүкийн Blue)", dark: true },
       { token: "white", swatch: "bg-white", hex: "#FFFFFF", use: "Хуудасны дэвсгэр, карт" },
     ],
   },

@@ -1,79 +1,31 @@
-import { useId } from "react";
 import { Brand } from "@/components/layout/Brand";
+import { LogoSymbol } from "@/components/brand/Logo";
+import { LOGO } from "@/components/brand/logo-geometry";
 import { AutoGrid } from "@/components/ui/AutoGrid";
 import { site } from "@/content/site";
 import { cn } from "@/lib/cn";
 
 /*
  * Логоны стандарт: Бодь Группийн «Брэнд хөтөч», 2-р бүлэг «Логоны байгуулалт, стандарт» (х. 9–41).
- * Брэндбүүкийн тоо, өнгийг энд шууд бичсэн. Брэндбүүк шинэчлэгдвэл энэ файлыг шинэчилнэ.
+ * Лого өөрөө брэндбүүкийн векторoос (components/brand/logo-geometry.ts). Өнгө, тоог энд шууд бичсэн.
+ * Брэндбүүк шинэчлэгдвэл энэ файлыг шинэчилнэ.
  */
 
 export const BRAND_BLUE = "#0072BC";
 
-/* ---------- Тэмдэг ба лого ---------- */
+/* ---------- Лого (тэмдэг + бичиглэл) ---------- */
 
-const CORNERS = [
-  [0, 0],
-  [432, 0],
-  [0, 432],
-  [432, 432],
-] as const;
-
-/**
- * Таван нүдэн тэмдэг (432×432 нэгж). public/images/logo.svg-тэй ижил байгуулалт:
- * дотор тойрог r170, булангийн тойрог r195 ба r258 (брэндбүүкийн 100% : 130%).
- * Өнгө нь currentColor. Хуудсанд олон удаа гарах тул id бүрийг useId-ээр үүсгэнэ.
- */
-function SymbolShape() {
-  const id = useId().replace(/[^a-zA-Z0-9_-]/g, "");
-  return (
-    <>
-      <defs>
-        <clipPath id={`${id}-in`}>
-          <circle cx="216" cy="216" r="170" />
-        </clipPath>
-        <mask id={`${id}-m`}>
-          <rect width="432" height="432" fill="#fff" />
-          <circle cx="216" cy="216" r="170" fill="#000" />
-          <g clipPath={`url(#${id}-in)`}>
-            {CORNERS.map(([x, y]) => (
-              <circle key={`o${x}-${y}`} cx={x} cy={y} r="258" fill="#fff" />
-            ))}
-            {CORNERS.map(([x, y]) => (
-              <circle key={`i${x}-${y}`} cx={x} cy={y} r="195" fill="#000" />
-            ))}
-          </g>
-        </mask>
-      </defs>
-      <circle cx="216" cy="216" r="216" fill="currentColor" mask={`url(#${id}-m)`} />
-    </>
-  );
-}
-
-/** Зөвхөн тэмдэг */
-export function LogoSymbol({ size = 48, color = BRAND_BLUE, className }: { size?: number; color?: string; className?: string }) {
-  return (
-    <svg viewBox="0 0 432 432" width={size} height={size} className={cn("block flex-none", className)} style={{ color }} aria-hidden="true">
-      <SymbolShape />
-    </svg>
-  );
-}
-
-/*
- * Лого (тэмдэг + бичиглэл) 100 нэгжийн тэмдэгтэй координатад:
- *   x (нэгж)            = тэмдгийн диаметрийн ¼ = 25
- *   тэмдэг ба бичгийн зай = x
- *   том үсгийн өндөр      ≈ 1.6x = 40 (брэндбүүкийн х. 23-аас хэмжив)
- * Бичгийн өргөнийг textLength-ээр тогтоосон тул фонт ачаалагдаагүй үед ч харьцаа алдагдахгүй.
- */
-const UNIT = 25;
-const CAP = 40;
-const FONT_SIZE = 55; // Inter-ийн том үсгийн өндөр ≈ 0.727em → 40 нэгж
-const TEXT_W = 338;
+// Координат: тэмдгийн өндөр 100 нэгж. x = LOGO.unit (тэмдгийн ¼).
+const U = LOGO.unit;
+const SW = LOGO.symbolWidth;
+const WS = LOGO.wordStart;
+const WW = LOGO.wordEnd - LOGO.wordStart;
+const CAP = LOGO.capBottom - LOGO.capTop;
+/** Том үсгийн өндөр x-ээр (≈ 1.5) */
+const CAP_X = (CAP / U).toFixed(1);
 
 type LockupProps = {
-  /** Тэмдгийн диаметр, px */
+  /** Тэмдгийн өндөр, px */
   size?: number;
   color?: string;
   textColor?: string;
@@ -82,6 +34,7 @@ type LockupProps = {
   gap?: number;
   arrangement?: "row" | "reverse" | "stacked";
   stretch?: number;
+  /** Өгвөл бичиглэлийн оронд энэ бичвэрийг фонтоор бичнэ */
   text?: string;
   textStyle?: React.CSSProperties;
   textOutline?: boolean;
@@ -89,6 +42,10 @@ type LockupProps = {
   className?: string;
 };
 
+/**
+ * Брэндбүүкийн лого, өнгө ба харьцааг өөрчлөх боломжтой хувилбар.
+ * Сайтад энгийн лого хэрэгтэй бол components/brand/Logo.tsx-ийн LogoLockup-ийг ашиглана.
+ */
 export function Lockup({
   size = 64,
   color = BRAND_BLUE,
@@ -97,42 +54,38 @@ export function Lockup({
   gap = 1,
   arrangement = "row",
   stretch = 1,
-  text = site.brand,
+  text,
   textStyle,
   textOutline,
   style,
   className,
 }: LockupProps) {
   const s = 100 * symbolScale;
-  const g = gap * UNIT;
-  let w: number, h: number, sx: number, sy: number, tx: number, ty: number;
-  let anchor: "start" | "middle" = "start";
+  const sW = SW * symbolScale;
+  const g = gap * U;
+  let w: number, h: number, sx: number, sy: number, dx: number, dy: number;
 
   if (arrangement === "stacked") {
-    w = Math.max(TEXT_W, s);
+    w = Math.max(WW, sW);
     h = s + g + CAP;
-    sx = (w - s) / 2;
-    sy = 0;
-    tx = w / 2;
-    ty = h;
-    anchor = "middle";
+    [sx, sy] = [(w - sW) / 2, 0];
+    [dx, dy] = [(w - WW) / 2 - WS, s + g - LOGO.capTop];
   } else {
-    w = s + g + TEXT_W;
+    w = sW + g + WW;
     h = Math.max(s, 100);
     sy = (h - s) / 2;
-    ty = h / 2 + CAP / 2;
-    [sx, tx] = arrangement === "reverse" ? [TEXT_W + g, 0] : [0, s + g];
+    dy = (h - 100) / 2;
+    [sx, dx] = arrangement === "reverse" ? [WW + g, -WS] : [0, sW + g - WS];
   }
 
   const k = size / 100;
   const fill = textColor ?? color;
-  // Бичгийн өргөнийг зөвхөн жинхэнэ бичиглэлд тогтооно. Өөр бичвэрт хүчээр тэлэхэд үсэг хэт сарнина.
-  const fit = text === site.brand;
+  const asText = text !== undefined || textStyle !== undefined;
 
   return (
     <svg
       role="img"
-      aria-label={text}
+      aria-label={text ?? site.brand}
       viewBox={`0 0 ${w} ${h}`}
       width={w * k * stretch}
       height={h * k}
@@ -140,24 +93,27 @@ export function Lockup({
       className={cn("block h-auto max-w-full flex-none", className)}
       style={style}
     >
-      <g transform={`translate(${sx} ${sy}) scale(${s / 432})`} style={{ color }}>
-        <SymbolShape />
-      </g>
-      <text
-        x={tx}
-        y={ty}
-        textAnchor={anchor}
-        fontSize={FONT_SIZE}
-        fontWeight={800}
-        textLength={fit ? TEXT_W : undefined}
-        lengthAdjust={fit ? "spacing" : undefined}
-        fill={textOutline ? "none" : fill}
-        stroke={textOutline ? fill : undefined}
-        strokeWidth={textOutline ? 1.5 : undefined}
-        style={{ fontFamily: "var(--font-inter), system-ui, sans-serif", ...textStyle }}
-      >
-        {text}
-      </text>
+      <path d={LOGO.symbolD} transform={`translate(${sx} ${sy}) scale(${symbolScale})`} fill={color} />
+      {asText ? (
+        <text
+          x={dx + WS}
+          y={dy + LOGO.capBottom}
+          fontSize={CAP / 0.727}
+          fontWeight={800}
+          fill={fill}
+          style={{ fontFamily: "var(--font-inter), system-ui, sans-serif", ...textStyle }}
+        >
+          {text ?? site.brand}
+        </text>
+      ) : (
+        <path
+          d={LOGO.wordD}
+          transform={`translate(${dx} ${dy})`}
+          fill={textOutline ? "none" : fill}
+          stroke={textOutline ? fill : undefined}
+          strokeWidth={textOutline ? 1.2 : undefined}
+        />
+      )}
     </svg>
   );
 }
@@ -261,22 +217,34 @@ function Panel({ caption, className, children }: { caption: React.ReactNode; cla
   );
 }
 
-/** Тэмдгийн байгуулалт: 100% ба 130% тойргууд */
+/**
+ * Тэмдгийн байгуулалт (брэндбүүк х. 10–11). Жижиг тойрог D (100%), том тойрог 1.3D (130%).
+ * 4 хувилбарыг нэгнийх нь том тойрог нөгөөгийнхөө жижиг тойрогт шүргэлцэхээр (төв хоорондын
+ * зай 1.15D) байрлуулж, төвд 5 дахийг тавина. Тэмдэг = 5 дахийн том тойргийн доторх хэсэг.
+ */
 function ConstructionDiagram() {
-  const guide = { fill: "none", stroke: "#F58220", strokeWidth: 2, strokeDasharray: "6 5" } as const;
+  const cx = SW / 2;
+  const cy = 50;
+  const R = 50; // том тойрог = тэмдгийн радиус
+  const r = R / 1.3; // жижиг тойрог
+  const off = (r + R) / 2; // булангийн төвүүдийн тэнхлэг дагуух шилжилт (1.15D / 2)
+  const guide = { fill: "none", stroke: "#F58220", strokeWidth: 0.6, strokeDasharray: "2 1.6" } as const;
   return (
-    <svg viewBox="-60 -60 552 552" className="h-auto w-full max-w-[320px]" aria-hidden="true">
-      <g style={{ color: "#BACCEA" }}>
-        <SymbolShape />
-      </g>
-      <circle cx="216" cy="216" r="216" fill="none" stroke="#0072BC" strokeWidth="2" />
-      <circle cx="216" cy="216" r="170" fill="none" stroke="#0072BC" strokeWidth="2" strokeDasharray="6 5" />
-      {CORNERS.map(([x, y]) => (
-        <g key={`${x}-${y}`}>
-          <circle cx={x} cy={y} r="195" {...guide} />
-          <circle cx={x} cy={y} r="258" {...guide} strokeOpacity=".5" />
+    <svg viewBox={`${cx - 95} ${cy - 95} 190 190`} className="h-auto w-full max-w-[320px]" aria-hidden="true">
+      <path d={LOGO.symbolD} fill="#BACCEA" />
+      {[
+        [-1, -1],
+        [1, -1],
+        [-1, 1],
+        [1, 1],
+      ].map(([sx, sy]) => (
+        <g key={`${sx}${sy}`}>
+          <circle cx={cx + sx * off} cy={cy + sy * off} r={r} {...guide} />
+          <circle cx={cx + sx * off} cy={cy + sy * off} r={R} {...guide} strokeOpacity=".55" />
         </g>
       ))}
+      <circle cx={cx} cy={cy} r={R} fill="none" stroke="#0072BC" strokeWidth="0.7" />
+      <circle cx={cx} cy={cy} r={r} fill="none" stroke="#0072BC" strokeWidth="0.7" strokeDasharray="2 1.6" />
     </svg>
   );
 }
@@ -306,65 +274,59 @@ function RatioDiagram() {
 
 /** Лого, түүний сул зай ба хэмжээсүүд (x = тэмдгийн диаметрийн ¼) */
 function ClearSpaceDiagram() {
-  // Сул зайн хүрээ: (0,30)–(513,180). Лого: (25,55)–(488,155).
-  const x0 = 25;
-  const y0 = 55;
-  const capTop = y0 + 50 - CAP / 2;
-  const capBottom = y0 + 50 + CAP / 2;
+  const top = 30; // дээд талын хэмжээсийн бичгийн зай
+  const x0 = U;
+  const y0 = top + U;
+  const boxW = LOGO.wordEnd + 2 * U;
+  const boxH = 100 + 2 * U;
+  const capTop = y0 + LOGO.capTop;
+  const capBottom = y0 + LOGO.capBottom;
+  const right = boxW + 14;
   const dash = { stroke: "#0072BC", strokeWidth: 1, strokeDasharray: "4 4", fill: "none" } as const;
+  const orange = { stroke: "#F58220", strokeWidth: 1.5 } as const;
   const label = { fontSize: 13, fontWeight: 700, fill: "#F58220", textAnchor: "middle" } as const;
   const corners = [
-    [0, 30],
-    [488, 30],
-    [0, 155],
-    [488, 155],
+    [0, top],
+    [boxW - U, top],
+    [0, top + boxH - U],
+    [boxW - U, top + boxH - U],
+  ];
+  const dims: [number, number, string][] = [
+    [0, U, "x"],
+    [U, U + SW, "4x"],
+    [U + SW, U + WS, "x"],
   ];
 
   return (
-    <svg viewBox="0 0 570 190" className="h-auto w-full" role="img" aria-label="Логоны сул зай ба хэмжээс">
+    <svg viewBox={`0 0 ${right + 40} ${top + boxH + 4}`} className="h-auto w-full" role="img" aria-label="Логоны сул зай ба хэмжээс">
       {corners.map(([x, y]) => (
-        <rect key={`${x}-${y}`} x={x} y={y} width={UNIT} height={UNIT} fill="#DCE3EC" />
+        <rect key={`${x}-${y}`} x={x} y={y} width={U} height={U} fill="#DCE3EC" />
       ))}
-      <rect x="0" y="30" width="513" height="150" {...dash} />
-      <rect x={x0} y={y0} width="463" height="100" {...dash} strokeDasharray="2 3" />
-      <line x1={x0 + 125} y1={capTop} x2="530" y2={capTop} {...dash} stroke="#F58220" />
-      <line x1={x0 + 125} y1={capBottom} x2="530" y2={capBottom} {...dash} stroke="#F58220" />
+      <rect x="0" y={top} width={boxW} height={boxH} {...dash} />
+      <rect x={x0} y={y0} width={LOGO.wordEnd} height="100" {...dash} strokeDasharray="2 3" />
+      <line x1={x0 + WS} y1={capTop} x2={right} y2={capTop} {...dash} stroke="#F58220" />
+      <line x1={x0 + WS} y1={capBottom} x2={right} y2={capBottom} {...dash} stroke="#F58220" />
 
-      <g transform={`translate(${x0} ${y0}) scale(${100 / 432})`} style={{ color: BRAND_BLUE }}>
-        <SymbolShape />
+      <g transform={`translate(${x0} ${y0})`} fill={BRAND_BLUE}>
+        <path d={LOGO.symbolD} />
+        <path d={LOGO.wordD} />
       </g>
-      <text
-        x={x0 + 125}
-        y={capBottom}
-        fontSize={FONT_SIZE}
-        fontWeight={800}
-        textLength={TEXT_W}
-        lengthAdjust="spacing"
-        fill={BRAND_BLUE}
-        style={{ fontFamily: "var(--font-inter), system-ui, sans-serif" }}
-      >
-        {site.brand}
-      </text>
 
       {/* Дээд талын хэмжээс: x · 4x · x */}
-      {[
-        [0, 25, "x"],
-        [25, 125, "4x"],
-        [125, 150, "x"],
-      ].map(([a, b, t]) => (
-        <g key={`${a}`}>
-          <line x1={a} y1="14" x2={b} y2="14" stroke="#F58220" strokeWidth="1.5" />
-          <line x1={a} y1="9" x2={a} y2="19" stroke="#F58220" strokeWidth="1.5" />
-          <line x1={b} y1="9" x2={b} y2="19" stroke="#F58220" strokeWidth="1.5" />
-          <text x={(Number(a) + Number(b)) / 2} y="9" {...label}>
+      {dims.map(([a, b, t]) => (
+        <g key={a}>
+          <line x1={a} y1="14" x2={b} y2="14" {...orange} />
+          <line x1={a} y1="9" x2={a} y2="19" {...orange} />
+          <line x1={b} y1="9" x2={b} y2="19" {...orange} />
+          <text x={(a + b) / 2} y="8" {...label}>
             {t}
           </text>
         </g>
       ))}
       {/* Баруун талын хэмжээс: том үсгийн өндөр */}
-      <line x1="540" y1={capTop} x2="540" y2={capBottom} stroke="#F58220" strokeWidth="1.5" />
-      <text x="556" y={(capTop + capBottom) / 2 + 5} {...label}>
-        1.6x
+      <line x1={right} y1={capTop} x2={right} y2={capBottom} {...orange} />
+      <text x={right + 22} y={(capTop + capBottom) / 2 + 5} {...label}>
+        {CAP_X}x
       </text>
     </svg>
   );
@@ -432,8 +394,10 @@ export function LogoGuide() {
       {/* Бичиглэл */}
       <div>
         <SubHead title="Бичиглэлийн хэлбэр">
-          Албан ёсны фонт: <strong>Futuris</strong>, Bold, бүгд том үсгээр (UPPERCASE). Хэвлэл, албан бичигт заавал
-          SVG/PNG лого файлыг ашиглана. Вэб дээрх энэ хуудасны жишээнүүдэд Inter Extrabold-оор орлуулсан.
+          Албан ёсны фонт: <strong>Futuris</strong>, Bold, бүгд том үсгээр (UPPERCASE). «BODI RAIL» бичиглэлийг
+          брэндбүүкийн логоны Futuris үсгүүдээс угсарсан тул фонт суулгах шаардлагагүй. Логог үргэлж бэлэн файлаас
+          (<code className="rounded-md bg-soft px-1.5 py-0.5 font-mono text-[13px]">/images/logo-full.svg</code>)
+          ашиглана, бичвэрээр бичиж болохгүй.
         </SubHead>
       </div>
 
@@ -456,13 +420,13 @@ export function LogoGuide() {
         <AutoGrid min={320}>
           <Panel caption="Тэмдэг ≥ 1 см (38px)" className="min-h-40">
             <div className="flex flex-col items-start gap-2">
-              <LogoSymbol size={38} />
+              <LogoSymbol className="h-[38px] w-auto text-brand" />
               <Ruler width={38} label="1 см" />
             </div>
           </Panel>
           <Panel caption="Бүтэн лого ≥ 4 см (151px)" className="min-h-40">
             <div className="flex flex-col items-start gap-2">
-              <Lockup size={151 / 4.63} />
+              <Lockup size={(151 * 100) / LOGO.wordEnd} />
               <Ruler width={151} label="4 см" />
             </div>
           </Panel>
