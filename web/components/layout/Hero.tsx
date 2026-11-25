@@ -9,9 +9,6 @@ export function Hero() {
     <section className="overflow-hidden bg-navy pb-24 text-white">
       <Container className="flex flex-wrap items-center gap-12 pt-24">
         <div className="flex min-w-0 flex-[1_1_460px] flex-col gap-6">
-          <span className="self-start rounded-full border border-white/35 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[.1em] text-light">
-            Бодь Группийн охин компани
-          </span>
           <h1 className="text-4xl leading-[1.1] font-extrabold uppercase md:text-[52px]">Тээвэр логистикийн компани</h1>
           <Rule />
           <p className="max-w-[560px] text-lg leading-[1.6] text-light">

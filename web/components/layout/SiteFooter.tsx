@@ -74,7 +74,6 @@ export function SiteFooter() {
 
         <div className="flex flex-wrap justify-between gap-3 border-t border-white/15 pt-6 text-[13px] text-[#a9bcd4]">
           <span>© {new Date().getFullYear()} {site.name}. Бүх эрх хуулиар хамгаалагдсан.</span>
-          <span>{site.tagline}</span>
         </div>
       </Container>
     </footer>
