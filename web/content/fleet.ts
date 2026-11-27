@@ -23,7 +23,7 @@ export const fleet: FleetSlide[] = [
   },
   {
     title: "RM RAIL тавцант вагон",
-    tag: "Тавцант вагон · 200 ширхэг",
+    tag: "Тавцант вагон · 208 ширхэг",
     image: "/images/tavtsant-vagon.jpg",
     label: "Чингэлэг ачсан RM RAIL 13-1258-01 загварын тавцант вагон",
     position: "center 58%",
