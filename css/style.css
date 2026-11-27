@@ -262,7 +262,8 @@ p { margin: 0; }
 .partners { display: flex; flex-wrap: wrap; gap: 32px; }
 .partners__group { flex: 1 1 480px; min-width: 0; display: flex; flex-direction: column; gap: 16px; }
 .partners__label { font-size: 14px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
-.logo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr)); gap: 16px; }
+.logo-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 600px) { .logo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .logo-box { height: 104px; border: 1px solid var(--ph); border-radius: 16px; display: flex; align-items: center; justify-content: center; text-align: center; padding: 8px; font-size: 14px; font-weight: 600; overflow: hidden; background: #fff; }
 .logo-box img { width: 100%; height: 100%; object-fit: contain; padding: 10px; }
 .logo-box img.logo--wide-margin { transform: scale(1.6); } /* Wabtec зурагт ирмэгийн цагаан зай их байгаа тул томруулна */

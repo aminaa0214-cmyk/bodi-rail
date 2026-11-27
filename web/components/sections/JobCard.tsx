@@ -1,6 +1,6 @@
 "use client";
 
-import type { Job } from "@/content/jobs";
+import type { Job } from "@/lib/data";
 import { APPLY_EVENT } from "@/components/forms/ApplicationForm";
 import { buttonClass } from "@/components/ui/Button";
 import { Tag } from "@/components/ui/Tag";

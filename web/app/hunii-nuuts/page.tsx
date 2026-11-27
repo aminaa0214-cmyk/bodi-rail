@@ -8,14 +8,18 @@ import { SectionHead } from "@/components/ui/SectionHead";
 import { BenefitCard } from "@/components/sections/BenefitCard";
 import { JobCard } from "@/components/sections/JobCard";
 import { ApplicationForm } from "@/components/forms/ApplicationForm";
-import { benefits, jobs } from "@/content/jobs";
+import { benefits } from "@/content/jobs";
+import { getJobs } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "Хүний нөөц",
   description: "Бодь Рэйл ХХК-ийн нээлттэй ажлын байр. Анкетаа онлайнаар бөглөж илгээнэ үү.",
 };
 
-export default function HuniiNuutsPage() {
+export default async function HuniiNuutsPage() {
+  // Ажлын зар: Supabase → jobs. Анкетын "Албан тушаал" сонголт мөн эндээс.
+  const jobs = await getJobs();
+
   return (
     <>
       <PageHero
@@ -68,7 +72,7 @@ export default function HuniiNuutsPage() {
               </>
             }
           />
-          <ApplicationForm />
+          <ApplicationForm jobs={jobs} />
         </Container>
       </Section>
     </>

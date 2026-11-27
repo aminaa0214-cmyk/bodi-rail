@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useTransition } from "react";
 import { sendApplication } from "@/app/actions/send-application";
-import { DRIVER_POSITION, RAIL_POSITIONS } from "@/content/jobs";
+import type { Job } from "@/lib/data";
 import { HONEYPOT_FIELD } from "@/lib/inquiry";
 import {
   ACCEPT_ATTR,
@@ -20,6 +20,7 @@ import {
 import { Button } from "@/components/ui/Button";
 import { control } from "@/components/forms/Field";
 import { cn } from "@/lib/cn";
+import { compressImage } from "@/lib/compress-image";
 
 /** Ажлын байрны картын "Анкет бөглөх" товч энэ event-ийг илгээж, албан тушаалыг сонгуулна. */
 export const APPLY_EVENT = "bodi:apply";
@@ -138,31 +139,15 @@ function RepeatGroup({ group, resetKey }: { group: GroupDef; resetKey: number })
   );
 }
 
-/** Зургийг илгээхээс өмнө шахна (Vercel-ийн 4.5 MB хязгаарт багтаахын тулд) */
-async function compressImage(file: File): Promise<File> {
-  if (!file.type.startsWith("image/") || file.size < 600 * 1024) return file;
-  try {
-    const bitmap = await createImageBitmap(file);
-    const scale = Math.min(1, 2000 / Math.max(bitmap.width, bitmap.height));
-    const canvas = document.createElement("canvas");
-    canvas.width = Math.round(bitmap.width * scale);
-    canvas.height = Math.round(bitmap.height * scale);
-    canvas.getContext("2d")?.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
-    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.82));
-    if (!blob || blob.size >= file.size) return file;
-    return new File([blob], file.name.replace(/\.\w+$/, "") + ".jpg", { type: "image/jpeg" });
-  } catch {
-    return file;
-  }
-}
-
 function fieldLabel(el: Element) {
   const label = el.closest("label") ?? el.closest("fieldset");
   const text = label?.querySelector("span, legend")?.textContent ?? "Талбар";
   return text.replace("*", "").replace(/\(.*\)/, "").trim();
 }
 
-export function ApplicationForm() {
+type JobOption = Pick<Job, "title" | "requiresDriverLicense" | "requiresRailDocuments">;
+
+export function ApplicationForm({ jobs }: { jobs: JobOption[] }) {
   const [position, setPosition] = useState("");
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [today, setToday] = useState("");
@@ -170,8 +155,9 @@ export function ApplicationForm() {
   const [result, setResult] = useState<ApplicationResult>({ status: "idle" });
   const [pending, startTransition] = useTransition();
 
-  const isDriver = position === DRIVER_POSITION;
-  const isRail = RAIL_POSITIONS.includes(position);
+  const selectedJob = jobs.find((job) => job.title === position);
+  const isDriver = selectedJob?.requiresDriverLicense ?? false;
+  const isRail = selectedJob?.requiresRailDocuments ?? false;
 
   useEffect(() => {
     setToday(new Date().toISOString().slice(0, 10));
@@ -207,7 +193,7 @@ export function ApplicationForm() {
       return fail(`“${fieldLabel(el)}” талбарыг зөв бөглөнө үү.`, el);
     }
     if (isDriver && !form.querySelector('input[name="license_class"]:checked')) {
-      return fail("Захиргааны жолоочийн ажилд жолооны үнэмлэхний ангиллаа сонгоно уу.", form.querySelector('input[name="license_class"]'));
+      return fail(`“${position}” ажлын байранд жолооны үнэмлэхний ангиллаа сонгоно уу.`, form.querySelector('input[name="license_class"]'));
     }
 
     setResult({ status: "idle" });
@@ -287,7 +273,12 @@ export function ApplicationForm() {
             return (
               <FieldBox key={field.name} field={field} required={required}>
                 {field.name === "position_1" ? (
-                  <Control field={field} name={field.name} value={position} onChange={setPosition} />
+                  <Control
+                    field={{ ...field, options: jobs.map((job) => job.title) }}
+                    name={field.name}
+                    value={position}
+                    onChange={setPosition}
+                  />
                 ) : (
                   <Control field={field} name={field.name} required={required} />
                 )}

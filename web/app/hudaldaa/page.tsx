@@ -15,6 +15,7 @@ import { ContactBox, FormIntro, FormSection } from "@/components/forms/FormSecti
 import { FormGrid, SelectField, TextareaField, TextField } from "@/components/forms/Field";
 import { InquiryForm } from "@/components/forms/InquiryForm";
 import { foreignPartners } from "@/content/partners";
+import { getOfferings } from "@/lib/data";
 
 const DESCRIPTION = "Бүх төрлийн зүтгүүр, вагон болон сэлбэг нийлүүлнэ.";
 
@@ -23,36 +24,6 @@ export const metadata: Metadata = {
   description: DESCRIPTION,
 };
 
-type Product = {
-  title: string;
-  text: string;
-  details: string[];
-  /** Жинхэнэ зураггүй бол саарал орлуулгад харагдах бичиг */
-  placeholder?: string;
-  image?: { src: string; alt: string };
-};
-
-const products: Product[] = [
-  {
-    title: "Зүтгүүр",
-    text: "Бүх төрлийн гол замын болон маневрын зүтгүүр нийлүүлнэ.",
-    details: ["[Зүтгүүрийн төрөл, загвар 1]", "[Зүтгүүрийн төрөл, загвар 2]"],
-    placeholder: "зүтгүүр",
-  },
-  {
-    title: "Вагон",
-    text: "Бүх төрлийн ачааны вагон нийлүүлнэ.",
-    details: ["[Вагоны төрөл 1: жишээ нь тавцант]", "[Вагоны төрөл 2: жишээ нь хагас вагон]"],
-    placeholder: "вагон",
-  },
-  {
-    title: "Сэлбэг",
-    text: "Зүтгүүр, вагоны сэлбэг материал. Өөрийн сэлбэг материалын агуулахтай.",
-    details: ["[Сэлбэгийн ангилал 1]", "[Сэлбэгийн ангилал 2]"],
-    image: { src: "/images/selbeg.webp", alt: "Зүтгүүрийн бүтэц, эд ангийн зураг" },
-  },
-];
-
 const steps = [
   { title: "Хүсэлт илгээх", text: "Хэрэгцээт бүтээгдэхүүн, тоо хэмжээгээ илгээнэ." },
   { title: "Үнийн санал", text: "Бид үнэ, нийлүүлэх хугацааны саналаа хүргүүлнэ." },
@@ -60,7 +31,10 @@ const steps = [
   { title: "Нийлүүлэлт", text: "Бүтээгдэхүүнийг тохирсон хугацаанд хүлээлгэн өгнө." },
 ];
 
-export default function HudaldaaPage() {
+export default async function HudaldaaPage() {
+  // Бүтээгдэхүүний картууд: Supabase → offerings (section = sale)
+  const products = await getOfferings("sale");
+
   return (
     <>
       <PageHero title="Худалдаа" breadcrumb={[{ label: "Худалдаа" }]} description={DESCRIPTION} />
@@ -68,11 +42,11 @@ export default function HudaldaaPage() {
       {/* Бүтээгдэхүүн */}
       <Section padding="pt-[72px] pb-24 md:pt-28">
         <Container>
-          <SectionHead pill="Бүтээгдэхүүн" title="Нийлүүлдэг бүтээгдэхүүн" />
+          <SectionHead pill="Бүтээгдэхүүн" title="Нийлүүлдэг хөдлөх бүрэлдэхүүн" />
           <AutoGrid>
             {products.map((product) => (
               <Card
-                key={product.title}
+                key={product.id}
                 variant="bordered"
                 media={
                   product.image ? (
@@ -83,21 +57,26 @@ export default function HudaldaaPage() {
                         fill
                         sizes="(max-width: 900px) 100vw, 420px"
                         className="object-cover"
+                        style={product.image.position ? { objectPosition: product.image.position } : undefined}
                       />
                     </div>
                   ) : (
-                    <ImagePlaceholder label={product.placeholder ?? product.title} className="h-60" />
+                    <ImagePlaceholder label={product.placeholder} className="h-60" />
                   )
                 }
               >
                 <CardTitle>{product.title}</CardTitle>
                 <CardText>
-                  <p>{product.text}</p>
-                  <ul className="list-disc pl-[18px]">
-                    {product.details.map((d) => (
-                      <li key={d}>{d}</li>
-                    ))}
-                  </ul>
+                  {product.lines.map((line) => (
+                    <p key={line}>{line}</p>
+                  ))}
+                  {product.details.length > 0 && (
+                    <ul className="list-disc pl-[18px]">
+                      {product.details.map((d) => (
+                        <li key={d}>{d}</li>
+                      ))}
+                    </ul>
+                  )}
                 </CardText>
                 <ButtonLink href="#quote" className="mt-auto self-start">
                   Үнийн санал авах
@@ -143,7 +122,7 @@ export default function HudaldaaPage() {
                 <TextField label="Байгууллагын нэр" name="company" autoComplete="organization" />
                 <TextField label="Утас" name="phone" type="tel" required autoComplete="tel" />
                 <TextField label="И-мэйл" name="email" type="email" autoComplete="email" />
-                <SelectField label="Бүтээгдэхүүн" name="product" options={["Зүтгүүр", "Вагон", "Сэлбэг"]} />
+                <SelectField label="Бүтээгдэхүүн" name="product" options={products.map((p) => p.title)} />
                 <TextField label="Загвар, тоо ширхэг" name="quantity" />
                 <TextareaField label="Нэмэлт мэдээлэл" name="message" full />
               </FormGrid>

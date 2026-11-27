@@ -4,7 +4,7 @@ import { cn } from "@/lib/cn";
 
 export function LogoGrid({ partners, className }: { partners: Partner[]; className?: string }) {
   return (
-    <div className={cn("grid grid-cols-[repeat(auto-fit,minmax(min(100%,140px),1fr))] gap-4", className)}>
+    <div className={cn("grid grid-cols-2 gap-4 sm:grid-cols-4", className)}>
       {partners.map((p) => (
         <div key={p.name} className="relative h-[104px] overflow-hidden rounded-2xl border border-ph bg-white">
           <Image

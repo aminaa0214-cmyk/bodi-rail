@@ -7,19 +7,18 @@ import { LinkArrow } from "@/components/ui/LinkArrow";
 import { Section } from "@/components/ui/Section";
 import { Stats } from "@/components/ui/Stats";
 import { Gallery } from "@/components/sections/Gallery";
-import { getNewsBySlug, news } from "@/content/news";
+import { getNews, getNewsBySlug } from "@/lib/data";
 
 type Props = { params: Promise<{ slug: string }> };
 
-// Зөвхөн content/news.ts-д байгаа мэдээнүүд; бусад нь 404
-export const dynamicParams = false;
-
-export function generateStaticParams() {
-  return news.map((article) => ({ slug: article.slug }));
+// Build хийх үед байгаа мэдээг урьдчилан бэлтгэнэ. Дараа нь Supabase-д нэмсэн мэдээ
+// анх нээгдэх үедээ үүснэ; байхгүй slug нь 404.
+export async function generateStaticParams() {
+  return (await getNews()).map((article) => ({ slug: article.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const article = getNewsBySlug((await params).slug);
+  const article = await getNewsBySlug((await params).slug);
   if (!article) return {};
   return {
     title: article.title,
@@ -29,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function NewsArticlePage({ params }: Props) {
-  const article = getNewsBySlug((await params).slug);
+  const article = await getNewsBySlug((await params).slug);
   if (!article) notFound();
 
   return (

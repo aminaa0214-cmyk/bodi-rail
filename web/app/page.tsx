@@ -4,6 +4,7 @@ import { AutoGrid } from "@/components/ui/AutoGrid";
 import { ButtonLink } from "@/components/ui/Button";
 import { Card, CardText, CardTitle } from "@/components/ui/Card";
 import { Container } from "@/components/ui/Container";
+import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { LinkArrow } from "@/components/ui/LinkArrow";
 import { Section } from "@/components/ui/Section";
 import { SectionHead } from "@/components/ui/SectionHead";
@@ -17,35 +18,13 @@ import { Split, SplitText } from "@/components/sections/Split";
 import { Timeline } from "@/components/sections/Timeline";
 import { fleet } from "@/content/fleet";
 import { licenses } from "@/content/licenses";
-import { news } from "@/content/news";
 import { domesticPartners, foreignPartners } from "@/content/partners";
 import { timeline } from "@/content/timeline";
+import { getNews, getOfferings } from "@/lib/data";
 
-const services = [
-  {
-    title: "Худалдаа",
-    text: "Бүх төрлийн зүтгүүр, вагон болон сэлбэг нийлүүлнэ.",
-    href: "/hudaldaa",
-    image: { src: "/images/hudaldaa.jpg", alt: "Зүтгүүр, вагон, хөдлөх бүрэлдэхүүний сэлбэг" },
-  },
-  {
-    title: "Түрээс",
-    text: "Гол замын 4 зүтгүүр, 200 тавцант вагон, чингэлэг өргөгч түрээслүүлнэ. Харилцагчийн хүсэлтээр бүх төрлийн хөдлөх бүрэлдэхүүнийг түрээслүүлнэ.",
-    href: "/uilchilgee#rent",
-    image: { src: "/images/turees.jpg", alt: "Түрээсийн зүтгүүр, вагон, чингэлэг өргөгч" },
-  },
-  {
-    title: "Үйлчилгээ",
-    text: "Төмөр замын ачаа тээвэр, ТЭ33АС серийн зүтгүүрийн засвар үйлчилгээ, ачаа тээврийн зөвлөх үйлчилгээ.",
-    href: "/uilchilgee",
-    image: {
-      src: "/images/uilchilgee.jpg",
-      alt: "Төмөр замын тээвэр, зүтгүүрийн засвар, зөвлөх үйлчилгээ, гаалийн зууч",
-    },
-  },
-];
+export default async function HomePage() {
+  const [services, news] = await Promise.all([getOfferings("home"), getNews()]);
 
-export default function HomePage() {
   return (
     <>
       <Hero />
@@ -112,23 +91,29 @@ export default function HomePage() {
           <AutoGrid>
             {services.map((service) => (
               <Card
-                key={service.title}
+                key={service.id}
                 media={
-                  <Image
-                    src={service.image.src}
-                    alt={service.image.alt}
-                    width={1408}
-                    height={768}
-                    sizes="(max-width: 900px) 100vw, 420px"
-                    className="h-[220px] w-full bg-white object-contain"
-                  />
+                  service.image ? (
+                    <Image
+                      src={service.image.src}
+                      alt={service.image.alt}
+                      width={1408}
+                      height={768}
+                      sizes="(max-width: 900px) 100vw, 420px"
+                      className="h-[220px] w-full bg-white object-contain"
+                    />
+                  ) : (
+                    <ImagePlaceholder label={service.placeholder} className="h-[220px]" />
+                  )
                 }
               >
                 <CardTitle>{service.title}</CardTitle>
                 <CardText>
-                  <p>{service.text}</p>
+                  {service.lines.map((line) => (
+                    <p key={line}>{line}</p>
+                  ))}
                 </CardText>
-                <LinkArrow href={service.href}>Дэлгэрэнгүй</LinkArrow>
+                {service.href && <LinkArrow href={service.href}>Дэлгэрэнгүй</LinkArrow>}
               </Card>
             ))}
           </AutoGrid>

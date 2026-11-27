@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { NewsImage } from "@/content/news";
+import type { NewsImage } from "@/lib/data";
 import { cn } from "@/lib/cn";
 
 /** Мэдээний зургийн цомог: 2 багана, гар утсан дээр 1 багана */

@@ -1,9 +1,8 @@
 /**
  * Онлайн анкетын бүтэц. Маягт (components/forms/ApplicationForm.tsx) болон
  * и-мэйл илгээх Server Action (app/actions/send-application.ts) хоёулаа үүнийг ашиглана.
- * Талбар нэмэх, хасах бол зөвхөн энд өөрчилнө.
+ * Талбар нэмэх, хасах бол зөвхөн энд өөрчилнө. "Албан тушаал 1"-ийн сонголтыг маягт Supabase-ийн jobs хүснэгтээс бөглөнө.
  */
-import { jobs } from "@/content/jobs";
 
 export type FieldType = "text" | "tel" | "email" | "url" | "number" | "date" | "month" | "select" | "textarea";
 
@@ -96,7 +95,7 @@ export const applicationParts: PartDef[] = [
       {
         kind: "fields",
         fields: [
-          { name: "position_1", label: "Албан тушаал 1", type: "select", required: true, options: jobs.map((j) => j.title) },
+          { name: "position_1", label: "Албан тушаал 1", type: "select", required: true, options: [] },
           { name: "position_2", label: "Албан тушаал 2", placeholder: "Сонирхож буй өөр албан тушаал" },
           { name: "expected_salary", label: "Таны хүсч буй цалин", placeholder: "₮" },
           { name: "available_date", label: "Ажилд орох боломжтой огноо", type: "date" },
