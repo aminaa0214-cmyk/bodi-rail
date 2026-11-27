@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { PageHero } from "@/components/layout/PageHero";
 import { AutoGrid } from "@/components/ui/AutoGrid";
 import { ButtonLink } from "@/components/ui/Button";
@@ -16,6 +17,7 @@ import { StepList } from "@/components/sections/Steps";
 import { ContactBox, FormIntro, FormSection } from "@/components/forms/FormSection";
 import { FormFieldset, FormGrid, SelectField, TextareaField, TextField, UnitField } from "@/components/forms/Field";
 import { InquiryForm } from "@/components/forms/InquiryForm";
+import { getOfferings } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "Үйлчилгээ",
@@ -23,39 +25,22 @@ export const metadata: Metadata = {
     "Төмөр замын ачаа тээвэр, хөдлөх бүрэлдэхүүний түрээс, ТЭ33АС зүтгүүрийн засвар, ачаа тээврийн зөвлөх үйлчилгээ.",
 };
 
-const rentals = [
-  {
-    tag: "Зүтгүүр",
-    title: "Evolution ТЭ33АС зүтгүүр",
-    meta: ["Гол замын зүтгүүр", "Тоо: 4 (ТЭ33АС-1001–1004)"],
-    placeholder: "ТЭ33АС зүтгүүр",
-  },
-  {
-    tag: "Вагон",
-    title: "Тавцант вагон",
-    meta: ["RM RAIL үйлдвэрийн 12-58 загвар", "Тоо: 200"],
-    placeholder: "тавцант вагон",
-  },
-  {
-    tag: "Чингэлэг өргөгч",
-    title: "Чингэлэг өргөгч",
-    meta: ["Брэнд: Kalmar (Калмар)", "Тоо: [тоо]"],
-    placeholder: "Калмар чингэлэг өргөгч",
-  },
-];
-
-const serviceOptions = [
-  "Түрээс: ТЭ33АС зүтгүүр",
-  "Түрээс: Тавцант вагон",
-  "Түрээс: Чингэлэг өргөгч",
-  "Түрээс: Бусад хөдлөх бүрэлдэхүүн",
+const otherServiceOptions = [
   "ТЭ33АС зүтгүүрийн засвар үйлчилгээ",
   "Ачаа тээврийн зөвлөх үйлчилгээ",
   "Ачилт, буулгалт",
   "Тээвэр зууч, гаалийн зууч",
 ];
 
-export default function UilchilgeePage() {
+export default async function UilchilgeePage() {
+  // Түрээсийн картууд: Supabase → offerings (section = rental)
+  const rentals = await getOfferings("rental");
+  const serviceOptions = [
+    ...rentals.map((item) => `Түрээс: ${item.title}`),
+    "Түрээс: Бусад хөдлөх бүрэлдэхүүн",
+    ...otherServiceOptions,
+  ];
+
   return (
     <>
       <PageHero
@@ -186,24 +171,49 @@ export default function UilchilgeePage() {
           <SectionHead
             pill="02"
             title="Хөдлөх бүрэлдэхүүний түрээс"
-            description="Гол замын 4 зүтгүүр, 200 тавцант вагон, чингэлэг өргөгч түрээслүүлнэ. Харилцагчийн хүсэлтээр бүх төрлийн хөдлөх бүрэлдэхүүнийг түрээслүүлэх боломжтой."
+            description="Гол замын 4 зүтгүүр, 208 тавцант вагон, чингэлэг өргөгч түрээслүүлнэ. Харилцагчийн хүсэлтээр бүх төрлийн хөдлөх бүрэлдэхүүнийг түрээслүүлэх боломжтой."
             action={<ButtonLink href="#request">Түрээсийн хүсэлт илгээх</ButtonLink>}
             className="mb-8"
           />
           <AutoGrid min={260}>
             {rentals.map((item) => (
               <Card
-                key={item.title}
+                key={item.id}
                 variant="bordered"
                 compact
-                media={<ImagePlaceholder label={item.placeholder} className="h-[180px]" />}
+                media={
+                  item.image ? (
+                    <div className="relative h-[180px]">
+                      <Image
+                        src={item.image.src}
+                        alt={item.image.alt}
+                        fill
+                        sizes="(max-width: 900px) 100vw, 320px"
+                        className="object-cover"
+                        style={item.image.position ? { objectPosition: item.image.position } : undefined}
+                      />
+                    </div>
+                  ) : (
+                    <ImagePlaceholder label={item.placeholder} className="h-[180px]" />
+                  )
+                }
               >
-                <Tag>{item.tag}</Tag>
+                {item.tag && <Tag>{item.tag}</Tag>}
                 <CardTitle compact>{item.title}</CardTitle>
                 <CardText>
-                  {item.meta[0]}
-                  <br />
-                  {item.meta[1]}
+                  {item.lines.map((line, i) => (
+                    <span key={line}>
+                      {i > 0 && <br />}
+                      {line}
+                    </span>
+                  ))}
+                  {item.details.length > 0 && (
+                    <ul className="mt-2 list-disc pl-[18px]">
+                      {item.details.map((s) => (
+                        <li key={s}>{s}</li>
+                      ))}
+                    </ul>
+                  )}
                 </CardText>
               </Card>
             ))}

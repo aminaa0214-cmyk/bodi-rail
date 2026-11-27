@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { NewsArticle } from "@/content/news";
+import type { NewsArticle } from "@/lib/data";
 import { Card, CardText, CardTitle } from "@/components/ui/Card";
 import { LinkArrow } from "@/components/ui/LinkArrow";
 
